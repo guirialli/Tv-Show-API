@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.estudos.common.convert.ConvertParam;
 import com.estudos.common.dto.ResponseError;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -19,18 +18,23 @@ public class ImdbController {
 
 	@Autowired
 	private ImdbService service;
-	
-	@Autowired
-	private ConvertParam convertParam;
 
 	@GetMapping
-	public ResponseEntity<Object> getTvShow(@RequestParam(required =  false) String title)
+	public ResponseEntity<Object> getTvShow(@RequestParam(required = false) String title,
+			@RequestParam(required = false) String season, @RequestParam(required = false) String episode)
 			throws JsonMappingException, JsonProcessingException {
-		if (title != null) {
-			var tvShow = this.service.findTvShowByTitle(this.convertParam.parser(title));
+		if (title != null && season != null && episode != null) {
+			var episodeData = this.service.findByEpisode(title, season, episode);
+			return ResponseEntity.ok(episodeData);
+		} else if (title != null && season != null) {
+			var episodeData = this.service.findBySeason(title, season);
+			return ResponseEntity.ok(episodeData);
+
+		} else if (title != null) {
+			var tvShow = this.service.findTvShowByTitle(title);
 			return ResponseEntity.ok(tvShow);
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-				.body(new ResponseError(400, "You need insert a param like: title!"));
+				.body(new ResponseError(400, "You need insert a param like: title, season, episode!"));
 	}
 }
