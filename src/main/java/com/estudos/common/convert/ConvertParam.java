@@ -6,6 +6,6 @@ import org.springframework.stereotype.Service;
 public class ConvertParam {
 	
 	public String parser(String param) {
-		return param.replaceAll(" ", "_").toLowerCase();
+		return param.replaceAll(" ", "+").toLowerCase();
 	}
 }
