@@ -68,9 +68,10 @@ public class ImdbService {
 		List<DataEpisodes> eps = new ArrayList<>();
 
 		var tvShow = this.findTvShowByTitle(title);
-		if (tvShow.titulo() != null && tvShow.seasons() != null
-				&& Integer.parseInt(season) <= Integer.parseInt(tvShow.seasons())) {
-
+		var seasonInt = Integer.parseInt(season);
+		var tvShowSeasonInt = Integer.parseInt(tvShow.seasons());
+		
+		if (tvShow.titulo() != null && tvShow.seasons() != null && seasonInt <= tvShowSeasonInt) {
 			var seasonData = this.findBySeason(title, season);
 			for (var ep : seasonData.episodes()) {
 				eps.add(new DataEpisodes(ep.title(), season, ep.episode(), ep.description(), ep.year(), ep.released(),
@@ -119,6 +120,8 @@ public class ImdbService {
 	}
 
 	private List<DataEpisodes> subList(List<DataEpisodes> list, int limit) {
+		if (list.size() == 0)
+			return new ArrayList<>();
 		return list.subList(0, limit > list.size() && limit < 0 ? list.size() : limit);
 	}
 }
