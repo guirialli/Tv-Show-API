@@ -1,6 +1,5 @@
 package com.estudos.provider.series.imdb;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,12 +39,17 @@ public class ImdbController {
 		var limitInt = Integer.parseInt(limit);
 		var desc = reverse.toLowerCase().equals("true");
 		Object eps;
-		
+
+		if (limitInt > 100)
+			limitInt = 50;
+		else if (limitInt < 0)
+			limitInt = 10;
+
 		if (season == null)
 			eps = this.service.filterByBestEpisodes(title, limitInt, desc);
 		else
 			eps = this.service.filterByBestEpisodes(title, limitInt, season, desc);
-		
+
 		return ResponseEntity.ok(eps);
 	}
 }
