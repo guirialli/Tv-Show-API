@@ -70,7 +70,7 @@ public class ImdbService {
 		var tvShow = this.findTvShowByTitle(title);
 		var seasonInt = Integer.parseInt(season);
 		var tvShowSeasonInt = Integer.parseInt(tvShow.seasons());
-		
+
 		if (tvShow.titulo() != null && tvShow.seasons() != null && seasonInt <= tvShowSeasonInt) {
 			var seasonData = this.findBySeason(title, season);
 			for (var ep : seasonData.episodes()) {
@@ -110,16 +110,30 @@ public class ImdbService {
 	// Busca pleos melhores eps e limita
 	public List<DataEpisodes> filterByBestEpisodes(String title, int limit, boolean reverse)
 			throws JsonMappingException, JsonProcessingException {
-		return limit <= 0 ? new ArrayList<>() : subList(this.filterByBestEpisodes(title, reverse), limit);
+		return limit <= 0 ? new ArrayList<>()
+				: subList(this.filterByBestEpisodes(title, reverse), limit).stream()
+						.map(ep -> this.findByEpisode(title, ep)).toList();
 	}
 
 	// Busca pelos melhores filtra pela season e limita
 	public List<DataEpisodes> filterByBestEpisodes(String title, int limit, String season, boolean reverse)
 			throws JsonMappingException, JsonProcessingException {
-		return limit <= 0 ? new ArrayList<>() : subList(this.filterByBestEpisodes(title, season, reverse), limit);
+		return limit <= 0 ? new ArrayList<>()
+				: subList(this.filterByBestEpisodes(title, season, reverse), limit).stream()
+						.map(ep -> this.findByEpisode(title, ep)).toList();
+	}
+
+	private DataEpisodes findByEpisode(String title, DataEpisodes ep) {
+		try {
+			return this.findByEpisode(title, ep.season(), ep.episode());
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return ep;
+		}
 	}
 
 	private List<DataEpisodes> subList(List<DataEpisodes> list, int limit) {
+
 		if (list.size() == 0)
 			return new ArrayList<>();
 		return list.subList(0, limit > list.size() && limit < 0 ? list.size() : limit);
