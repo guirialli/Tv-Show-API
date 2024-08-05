@@ -19,6 +19,12 @@ public class GlobalExceptionHandler {
 		var err = new ResponseError(400, ex.getMessage());
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(err);
 	}
+	
+	@ExceptionHandler(NumberFormatException.class)
+	public ResponseEntity<ResponseError> handleNumberFormatException(NumberFormatException ex){
+		var err = new ResponseError(400, ex.getMessage());
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+	}
 
 	@ExceptionHandler(JsonMappingException.class)
 	public ResponseEntity<ResponseError> handleJsonMappingException(JsonMappingException ex) {

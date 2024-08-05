@@ -1,5 +1,6 @@
 package com.estudos.provider.series.imdb;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,5 +30,22 @@ public class ImdbController {
 			response = this.service.findTvShowByTitle(title);
 		return ResponseEntity.ok(response);
 
+	}
+
+	@GetMapping("/best")
+	public ResponseEntity<Object> getTheBestTvShowEps(@RequestParam String title,
+			@RequestParam(defaultValue = "10") String limit, @RequestParam(required = false) String season,
+			@RequestParam(defaultValue = "false") String reverse) throws JsonMappingException, JsonProcessingException {
+
+		var limitInt = Integer.parseInt(limit);
+		var desc = reverse.toLowerCase().equals("true");
+		Object eps;
+		
+		if (season == null)
+			eps = this.service.filterByBestEpisodes(title, limitInt, desc);
+		else
+			eps = this.service.filterByBestEpisodes(title, limitInt, season, desc);
+		
+		return ResponseEntity.ok(eps);
 	}
 }
