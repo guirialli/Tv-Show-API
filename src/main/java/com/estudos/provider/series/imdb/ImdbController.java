@@ -15,41 +15,19 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 public class ImdbController {
 
 	@Autowired
-	private ImdbService service;
+	private ImdbRequestHandlerService requestHandlerService;
 
 	@GetMapping
 	public ResponseEntity<Object> getTvShow(@RequestParam() String title, @RequestParam(required = false) String season,
 			@RequestParam(required = false) String episode) throws JsonMappingException, JsonProcessingException {
-		Object response;
-		if (season != null && episode != null)
-			response = this.service.findByEpisode(title, season, episode);
-		else if (season != null)
-			response = this.service.findBySeason(title, season);
-		else
-			response = this.service.findTvShowByTitle(title);
-		return ResponseEntity.ok(response);
-
+		return requestHandlerService.getTvShow(title, season, episode);
 	}
 
 	@GetMapping("/best")
 	public ResponseEntity<Object> getTheBestTvShowEps(@RequestParam String title,
 			@RequestParam(defaultValue = "10") String limit, @RequestParam(required = false) String season,
 			@RequestParam(defaultValue = "false") String reverse) throws JsonMappingException, JsonProcessingException {
+		return requestHandlerService.getTheBestTvShowEps(title, limit, season, reverse);
 
-		var limitInt = Integer.parseInt(limit);
-		var desc = reverse.toLowerCase().equals("true");
-		Object eps;
-
-		if (limitInt > 100)
-			limitInt = 50;
-		else if (limitInt < 0)
-			limitInt = 10;
-
-		if (season == null)
-			eps = this.service.filterByBestEpisodes(title, limitInt, desc);
-		else
-			eps = this.service.filterByBestEpisodes(title, limitInt, season, desc);
-
-		return ResponseEntity.ok(eps);
 	}
 }
