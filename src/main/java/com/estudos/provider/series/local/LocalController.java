@@ -14,13 +14,22 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 @RestController
 @RequestMapping("/tvshow")
 public class LocalController {
-	
-	@Autowired 
+
+	@Autowired
 	LocalRequestHandlerService handlerService;
 
 	@GetMapping
-	public ResponseEntity<Object> getTvShow(@RequestParam() String title, @RequestParam(required = false) Integer season,
-			@RequestParam(required = false) Integer episode) throws JsonMappingException, JsonProcessingException, BadRequestException {
+	public ResponseEntity<Object> getTvShow(@RequestParam() String title,
+			@RequestParam(required = false) Integer season, @RequestParam(required = false) Integer episode)
+			throws JsonMappingException, JsonProcessingException, BadRequestException {
 		return handlerService.getTvShow(title, season, episode);
+	}
+
+	@GetMapping("/best")
+	public ResponseEntity<Object> filterBestEpisodes(@RequestParam() String title,
+			@RequestParam(defaultValue = "10", required = false) int limit,
+			@RequestParam(required = false) Integer season) {
+		return this.handlerService.filterBestEpisodes(title, season, limit);
+
 	}
 }

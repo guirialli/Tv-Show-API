@@ -1,9 +1,11 @@
 package com.estudos.provider.series.local;
 
-import org.apache.coyote.BadRequestException;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.estudos.common.http.exceptions.BadRequestException;
 import com.estudos.common.http.exceptions.NotFoundException;
 import com.estudos.provider.series.local.entity.Episode;
 import com.estudos.provider.series.local.entity.EpisodeRepository;
@@ -50,6 +52,14 @@ public class LocalService {
 		return episodeRepository.findByEpisodeAndTitleAndSeason(episode, title, seasonId)
 				.orElseThrow(() -> new NotFoundException("Not found Episode with tv show  title " + title + " season "
 						+ season + "or episode " + episode));
+	}
+	
+	public List<Episode> filterBestEpisodes(String title, int limit){
+		return this.episodeRepository.findAllByOrderByRating(title, limit);
+	}
+	
+	public List<Episode> filterBestEpisodes(String title, int season, int limit){
+		return this.episodeRepository.findAllByOrderByRating(title, season, limit);
 	}
 
 }
