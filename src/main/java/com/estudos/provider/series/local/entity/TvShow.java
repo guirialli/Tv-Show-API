@@ -1,4 +1,4 @@
-package com.estudos.provider.series.local;
+package com.estudos.provider.series.local.entity;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -38,7 +38,7 @@ public class TvShow {
 		if (!isNA.test(imdb.rating()))
 			this.rating = Double.parseDouble(imdb.rating());
 		if (!isNA.test(imdb.year())) {
-			this.year = DateConvert.imdbYear.parse(imdb.year());
+			this.year = DateConvert.imdbYear.parse(imdb.year().replaceAll("-", ""));
 		}
 		if (!isNA.test(imdb.released())) {
 			this.released = DateConvert.imdbRelesed.parse(imdb.released());

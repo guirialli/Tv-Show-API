@@ -1,4 +1,4 @@
-package com.estudos.provider.series.local;
+package com.estudos.provider.series.local.entity;
 
 import java.util.List;
 import java.util.Optional;

@@ -11,7 +11,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 @RestController
-@RequestMapping("/imdb")
+@RequestMapping("/tvshow/imdb")
 public class ImdbController {
 
 	@Autowired

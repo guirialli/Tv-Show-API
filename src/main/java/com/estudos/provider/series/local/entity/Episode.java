@@ -1,4 +1,4 @@
-package com.estudos.provider.series.local;
+package com.estudos.provider.series.local.entity;
 
 import java.text.ParseException;
 import java.util.Date;
